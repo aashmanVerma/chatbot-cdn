@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot Example</title>
+  <link rel="stylesheet" href="chatbot.css">
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+<body>
+
+  <!-- Chatbot Container -->
+  <div id="chat-wrapper"></div>
+
+  <script src="chatbot.js"></script>
+  <script>
+    const chatbotConfig = {
+      start: {
+        message: "Hello! How can I assist you today?",
+        options: [
+          { text: "Tell me a joke", next: "joke" },
+          { text: "Give me a quote", next: "quote" },
+        ],
+      },
+      joke: {
+        message: "Why don’t skeletons fight each other? Because they don’t have the guts!",
+        options: [{ text: "Back to start", next: "start" }],
+      },
+      quote: {
+        message: "The only limit to our realization of tomorrow is our doubts of today. - Franklin D. Roosevelt",
+        options: [{ text: "Back to start", next: "start" }],
+      },
+    };
+
+    // Initialize the chatbot
+    new Chatbot("Angela", "chat-wrapper", chatbotConfig);
+  </script>
+
+</body>
+</html>
