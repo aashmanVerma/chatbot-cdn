@@ -1,15 +1,16 @@
 class Chatbot {
-  constructor(name, containerId, config) {
+  constructor(name, containerId, config, heightClass) {
     this.container = document.getElementById(containerId);
     this.config = config;
     this.handleOptionClick = this.handleOptionClick.bind(this);
     this.name = name;
+    this.heightClass = heightClass;
     this.init();
   }
 
   init() {
     this.container.innerHTML = `
-      <div class="flex flex-col gap-y-3 w-[35rem]">
+      <div class="flex flex-col gap-y-3 min-w-[20rem] max-w-[35rem]">
         <div class="flex gap-x-1 items-center justify-center py-2 border-b border-b-gray-400">
           <span class="relative flex h-4 w-4 inline-flex mr-2">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-green-500"></span>
@@ -17,7 +18,7 @@ class Chatbot {
           </span>
           <span>${this.name} is Online</span>
         </div>
-        <div class="flex flex-col gap-y-4 p-4 overflow-y-auto h-[400px]" id="chat-container"></div>
+        <div class="flex flex-col gap-y-4 p-4 overflow-y-auto ${this.heightClass}" id="chat-container"></div>
       </div>
     `;
     this.renderChat("start");
@@ -47,10 +48,10 @@ class Chatbot {
       botMsg.innerHTML = `
         <img src="./img/agent.jpg" class="h-8 w-8 rounded-full flex-shrink-0" />
           <div class="flex flex-col gap-y-2">
-            <span class="bg-[#E5E7EB] w-fit py-1 px-4 pl-2 rounded">${chatData.message}</span>
+            ${chatData.message.map(msg => `<span class="bg-[#E5E7EB] w-fit py-1 px-4 pl-2 rounded">${msg}</span>`).join('')}
             <div class="flex flex-wrap gap-2 bg-[#E5E7EB] p-2 rounded w-fit opt-container">
               ${chatData.options.map((option, index) => `
-                <button class="option-btn px-2 cursor-pointer py-1 rounded bg-blue-300 w-fit" data-index="${index}">
+                <button class="option-btn px-4 cursor-pointer py-1 rounded-lg bg-blue-500 text-white font-medium w-fit" data-index="${index}">
                   ${option.text}
                 </button>`   
               ).join('')}
@@ -61,7 +62,16 @@ class Chatbot {
       botMsg.querySelectorAll(".option-btn").forEach((button) => {
         button.addEventListener("click", function () {
           const index = this.getAttribute("data-index");
-          fn(chatData.options[index].next, step);
+          const doesOptionContainUrl = chatData.options[index].url;
+
+          // If option contains URL, open it
+          if (doesOptionContainUrl) {
+            window.open(chatData.options[index].url, "_blank");
+            return;
+          } else {
+            const currOption = chatData.options[index].text;
+            fn(chatData.options[index].next, currOption);
+          }
         });
       });
 
@@ -69,19 +79,32 @@ class Chatbot {
     }, 600);
   }
 
-  handleOptionClick(nextStep, currStep) {
+  handleOptionClick(nextStep, selectedOption) {
     // Remove options from bot message && container
     document.querySelectorAll(".option-btn").forEach(btn => btn.remove());
     document.querySelector(".opt-container").remove();
 
     const chatContainer = document.getElementById("chat-container");
-    const selectedOption = this.config[currStep].options.find(opt => opt.next === nextStep)?.text || "You selected an option";
+
+    // Close chat if no next step
+    if (!nextStep) {
+      const chatClosed = document.createElement("div");
+      chatClosed.className = "flex gap-x-2 items-center w-[80%] self-start text-sm text-gray-500 mx-auto";
+      chatClosed.innerHTML = `
+        <hr class="bg-gray-100 w-1/3" />
+        <span class="whitespace-nowrap">Chat Closed</span>
+        <hr class="bg-gray-100 w-[30%] w-1/3" />
+      `;
+
+      chatContainer.appendChild(chatClosed);
+      return;
+    }
 
     const userMsg = document.createElement("div");
     userMsg.className = "user-msg flex gap-x-2 items-end justify-end w-[80%] self-end";
     userMsg.innerHTML = `
-      <div class="flex flex-col gap-y-1 justify-end items-end">
-        <span class="bg-[#E5E7EB] w-fit py-1 px-4 pl-2 rounded">${selectedOption}</span>
+      <div class="flex items-center justify-center bg-blue-500 text-white font-medium w-fit py-1 px-4 rounded">
+        ${selectedOption}
       </div>
       <img src="./img/user-icon.jpg" class="h-8 w-8 rounded-full flex-shrink-0" />
     `;
