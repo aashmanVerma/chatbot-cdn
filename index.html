@@ -1,40 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chatbot Example</title>
-  <link rel="stylesheet" href="chatbot.css">
-  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chatbot Example</title>
+    <link rel="stylesheet" href="chatbot.css" />
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+    <!-- Chatbot Container -->
+    <div id="chat-wrapper"></div>
 
-  <!-- Chatbot Container -->
-  <div id="chat-wrapper"></div>
+    <script src="chatbot.js"></script>
+    <script>
+      const chatbotConfig = {
+        start: {
+          message: [
+            "Hi 👋",
+            "I'm Angela from American Debt Assitance.",
+            "Want to find out if you qualify to reduce or eliminate your credit card debt today? Tap Yes! 😃",
+          ],
+          options: [
+            { text: "Yes", next: "agreed" },
+            // { text: "No" } // disqualify
+          ],
+        },
+        agreed: {
+          message: [
+            "Okay, let me ask you 2 quick questions.",
+            "Are you currently employed? Tap Yes or No.",
+          ],
+          options: [
+            { text: "Yes", next: "second1" },
+            { text: "No", next: "second2" },
+          ],
+        },
+        second1: {
+          message: [
+            "How much do you owe on all your credit cards in total? (Total combined balance)",
+          ],
+          options: [
+            { text: "Under $10,000", next: "s1F2" },
+            { text: "$10,000 - $20,000", next: "s1F1" },
+            { text: "$20,000 - $50,000", next: "s1F1" },
+            { text: "Over $50,000+", next: "s1F1" },
+          ],
+        },
+        second2: {
+          message: [
+            "Would you like to check if you're eligible for $5,000 Emergency Relief?",
+          ],
+          options: [
+            { text: "Yes", next: "s1F2" },
+            { text: "No", next: "s1F2" },
+          ],
+        },
+        //QUALIFIED
+        s1F1: {
+          message: [
+            "🎉 Congratulations! 🎁",
+            "You're pre-qualified to reduce your credit card debt!",
+            "Hold on while I finalize things...",
+            "Good News! Tap the button below and fill out the form to find out how much credit card debt you can reduce - It only takes 2 minutes.",
+          ],
+          options: [
+            {
+              text: "Reduce Your Debt Now >",
+              url: "https://clk.myamericaworld.com/click/",
+            },
+          ],
+        },
+        //DISQUALIFIED
+        s1F2: {
+          message: [
+            "🎉 Congratulations! 🎁 You are approved for up to $5,000 Emergency Relief. Use it to pay rent, bills, groceries, shopping and much more...",
+            "Tap the button below and confirm your information to claim up to $5,000. God Bless!",
+          ],
+          options: [
+            {
+              text: "Claim Emergency Relief >",
+              url: "https://clk.greatamericansociety.com/670bd484981ff83c34c20921?s1=Debt-Side",
+            },
+          ],
+        },
+      };
 
-  <script src="chatbot.js"></script>
-  <script>
-    const chatbotConfig = {
-      start: {
-        message: "Hello! How can I assist you today?",
-        options: [
-          { text: "Tell me a joke", next: "joke" },
-          { text: "Give me a quote", next: "quote" },
-        ],
-      },
-      joke: {
-        message: "Why don’t skeletons fight each other? Because they don’t have the guts!",
-        options: [{ text: "Back to start", next: "start" }],
-      },
-      quote: {
-        message: "The only limit to our realization of tomorrow is our doubts of today. - Franklin D. Roosevelt",
-        options: [{ text: "Back to start", next: "start" }],
-      },
-    };
-
-    // Initialize the chatbot
-    new Chatbot("Angela", "chat-wrapper", chatbotConfig);
-  </script>
-
-</body>
+      // Initialize the chatbot
+      new Chatbot("Angela", "chat-wrapper", chatbotConfig, null, 'lg');
+    </script>
+  </body>
 </html>

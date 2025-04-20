@@ -1,10 +1,36 @@
+const returnOptions = (option, index, size) => {
+  let classes = "option-btn cursor-pointer rounded-lg bg-blue-500 text-white font-medium w-full text-center";
+
+  switch(size) {
+    case 'sm':
+      classes += " px-3 py-1 text-sm";
+      break;
+    case 'md':
+      classes += " px-4 py-2 text-base";
+      break;
+    case 'lg':
+      classes += " px-5 py-3 text-lg";
+      break;
+    default:
+      classes += " px-4 py-2 text-base";  
+  }
+
+  return `
+    <button class="${classes}" data-index="${index}">
+      ${option.text}
+    </button>
+  `;
+};
+
+
 class Chatbot {
-  constructor(name, containerId, config, heightClass) {
+  constructor(name, containerId, config, heightClass, optionSize = 'sm') {
     this.container = document.getElementById(containerId);
     this.config = config;
     this.handleOptionClick = this.handleOptionClick.bind(this);
     this.name = name;
     this.heightClass = heightClass;
+    this.optionSize = optionSize;
     this.init();
   }
 
@@ -39,22 +65,19 @@ class Chatbot {
     chatContainer.appendChild(typingIndicator);
 
     const fn = this.handleOptionClick;
-    
+
     setTimeout(() => {
       chatContainer.removeChild(typingIndicator);
-      
+
       const botMsg = document.createElement("div");
       botMsg.className = "bot-msg flex gap-x-2 items-end w-[80%] self-start";
       botMsg.innerHTML = `
         <img src="./img/agent.jpg" class="h-8 w-8 rounded-full flex-shrink-0" />
           <div class="flex flex-col gap-y-2">
             ${chatData.message.map(msg => `<span class="bg-[#E5E7EB] w-fit py-1 px-4 pl-2 rounded">${msg}</span>`).join('')}
-            <div class="flex flex-wrap gap-2 bg-[#E5E7EB] p-2 rounded w-fit opt-container">
-              ${chatData.options.map((option, index) => `
-                <button class="option-btn px-4 cursor-pointer py-1 rounded-lg bg-blue-500 text-white font-medium w-fit" data-index="${index}">
-                  ${option.text}
-                </button>`   
-              ).join('')}
+            <div class="flex flex-col gap-2 bg-[#E5E7EB] p-2 rounded w-fit opt-container">
+              ${chatData.options.map((option, index) => returnOptions(option, index, this.optionSize)
+      ).join('')}
             </div>
         </div>
       `;
@@ -76,6 +99,7 @@ class Chatbot {
       });
 
       chatContainer.appendChild(botMsg);
+      botMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 600);
   }
 
