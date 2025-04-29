@@ -82,7 +82,16 @@ class Chatbot {
         </div>
       `;
 
-      botMsg.querySelectorAll(".option-btn").forEach((button) => {
+      botMsg.querySelectorAll(".option-btn").forEach((button, idx) => {
+        const option = chatData.options[idx];
+
+        if (option.load) {
+          const script = document.createElement('script');
+          script.src = option.load.startsWith('http') ? option.load : `https:${option.load}`;
+          script.async = true;
+          document.head.appendChild(script);
+        }
+
         button.addEventListener("click", function () {
           const index = this.getAttribute("data-index");
           const doesOptionContainUrl = chatData.options[index].url;
