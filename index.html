@@ -6,84 +6,36 @@
     <title>Chatbot Example</title>
     <link rel="stylesheet" href="chatbot.css" />
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/aashmanVerma/chatbot-cdn/chatbot.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aashmanVerma/chatbot-cdn/chatbot.css">
   </head>
   <body>
     <!-- Chatbot Container -->
     <div id="chat-wrapper"></div>
 
-    <script src="chatbot.js"></script>
     <script>
       const chatbotConfig = {
         start: {
-          message: [
-            "Hi 👋",
-            "I'm Angela from American Debt Assitance.",
-            "Want to find out if you qualify to reduce or eliminate your credit card debt today? Tap Yes! 😃",
-          ],
+          message: ['Over 75?'],
           options: [
-            { text: "Yes", next: "agreed" },
-            // { text: "No" } // disqualify
+            { text: "Yes", next: "yes" },
+            { text: "No", next: "no" } 
           ],
         },
-        agreed: {
-          message: [
-            "Okay, let me ask you 2 quick questions.",
-            "Are you currently employed? Tap Yes or No.",
-          ],
+        yes: {
+          message: ["Dial number 1"],
           options: [
-            { text: "Yes", next: "second1" },
-            { text: "No", next: "second2" },
-          ],
+            { text: "+18334122805", url: "tel:+18334122805", load: "//b-js.ringba.com/CA710ad67694a44334aa054cab9cafc21a" }
+          ]
         },
-        second1: {
-          message: [
-            "How much do you owe on all your credit cards in total? (Total combined balance)",
-          ],
+        no: {
+          message: ["Dial number 2"],
           options: [
-            { text: "Under $10,000", next: "s1F2" },
-            { text: "$10,000 - $20,000", next: "s1F1" },
-            { text: "$20,000 - $50,000", next: "s1F1" },
-            { text: "Over $50,000+", next: "s1F1" },
-          ],
-        },
-        second2: {
-          message: [
-            "Would you like to check if you're eligible for $5,000 Emergency Relief?",
-          ],
-          options: [
-            { text: "Yes", next: "s1F2" },
-            { text: "No", next: "s1F2" },
-          ],
-        },
-        //QUALIFIED
-        s1F1: {
-          message: [
-            "🎉 Congratulations! 🎁",
-            "You're pre-qualified to reduce your credit card debt!",
-            "Hold on while I finalize things...",
-            "Good News! Tap the button below and fill out the form to find out how much credit card debt you can reduce - It only takes 2 minutes.",
-          ],
-          options: [
-            {
-              text: "Reduce Your Debt Now >",
-              url: "https://clk.myamericaworld.com/click/",
-            },
-          ],
-        },
-        //DISQUALIFIED
-        s1F2: {
-          message: [
-            "🎉 Congratulations! 🎁 You are approved for up to $5,000 Emergency Relief. Use it to pay rent, bills, groceries, shopping and much more...",
-            "Tap the button below and confirm your information to claim up to $5,000. God Bless!",
-          ],
-          options: [
-            {
-              text: "Claim Emergency Relief >",
-              url: "https://clk.greatamericansociety.com/670bd484981ff83c34c20921?s1=Debt-Side",
-            },
-          ],
-        },
-      };
+            { text: "+18338014677", url: "tel:+18338014677", load: "//b-js.ringba.com/CA0958c61005e34c20b057b2f1b5c3ab78" }
+          ]
+        }
+      }
 
       // Initialize the chatbot
       new Chatbot("Angela", "chat-wrapper", chatbotConfig, null, 'lg');
