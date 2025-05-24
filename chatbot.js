@@ -158,17 +158,17 @@ class Chatbot {
         botMsg.querySelectorAll(".option-btn").forEach((button, idx) => {
             const option = chatData.options[idx];
 
+            if (option.execute && option.execute?.length) {
+                option.execute.forEach(fn => {
+                if (typeof fn === 'function') {
+                        fn(); 
+                    }
+                });
+            }
+
             button.addEventListener("click", async (e) => {
                 const index = button.getAttribute("data-index");
                 const selectedOption = option;
-
-                if (selectedOption.execute && selectedOption.execute?.length) {
-                    selectedOption.execute.forEach(fn => {
-                        if (typeof fn === 'function') {
-                            fn(); 
-                        }
-                    });
-                }
 
                 // If option contains URL, open it and return
                 if (selectedOption.url) {
